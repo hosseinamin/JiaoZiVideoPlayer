@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tips_not_wifi">        شما در حال استفاده از اینترنت موبایل هستید. نمایش دهنده ممکن است از اینترنت مصرف کند.</string>
+    <string name="tips_not_wifi_confirm">ادامه</string>
+    <string name="tips_not_wifi_cancel">توقف</string>
+    <string name="no_url">لینکی موجود نیست</string>
+    <string name="replay">شروع مجدد</string>
+    <string name="click_to_restart">دوباره امتحان کن</string>
+</resources>
