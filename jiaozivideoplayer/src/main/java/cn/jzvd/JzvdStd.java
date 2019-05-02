@@ -23,6 +23,8 @@ import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.net.ConnectivityManager;
+import java.lang.reflect.Method;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -289,11 +291,22 @@ public class JzvdStd extends Jzvd {
                 return;
             }
             if (currentState == CURRENT_STATE_NORMAL) {
-                if (!jzDataSource.getCurrentUrl().toString().startsWith("file") &&
-                        !jzDataSource.getCurrentUrl().toString().startsWith("/") &&
-                        !JZUtils.isWifiConnected(getContext()) && !WIFI_TIP_DIALOG_SHOWED) {
-                    showWifiDialog();
-                    return;
+                boolean mobileDataEnabled = false; // Assume disabled
+                ConnectivityManager cm = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+                try {
+                    Class cmClass = Class.forName(cm.getClass().getName());
+                    Method method = cmClass.getDeclaredMethod("getMobileDataEnabled");
+                    method.setAccessible(true); // Make the method callable
+                    // get the setting for "mobile data"
+                    mobileDataEnabled = (Boolean)method.invoke(cm);
+                    if (!jzDataSource.getCurrentUrl().toString().startsWith("file") &&
+                            !jzDataSource.getCurrentUrl().toString().startsWith("/") &&
+                            !JZUtils.isWifiConnected(getContext()) && mobileDataEnabled && !WIFI_TIP_DIALOG_SHOWED) {
+                        showWifiDialog();
+                        return;
+                    }
+                } catch (Exception e) {
+                    // pass
                 }
                 startVideo();
             } else if (currentState == CURRENT_STATE_AUTO_COMPLETE) {
